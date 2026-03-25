@@ -138,3 +138,15 @@ public:
 };
 ```
 
+## 3.7 Understand special member function generation
+
+The rule of three states that if you declare any of a copy constructor, copy assignment operator, or destructor, you should declare all three. 
+
+The C++11 rules governing the special member functions and thus:
+
+- **Default constructor**: Same rules as C++98. Generated only if the class contains no user-declared constructors.
+- **Destructor**: Essentially same rules as C++98. Sole different is that destructors are noexcept by default. 
+- **Copy constructor**: Same runtime behaviour as C++98: memberwise copy constructor of non-static members. Generated only if a class lacks of a user-declared copy constructor. Deleted if the class declares a move operation. Generation of this function in a class with a user-declared copy assignment operator or destructor is deprecated. 
+- **Copy assigment operator**: Same runtime behavior as C++98: memberwise copy assignment of non-static data members. Generated only if the class lacks a user-declared copy assignment operator. Deleted if the class declares a move operation. Generation of this function in a class with a user-declared copy constructor or destructor is deprecated.
+- **Move constructor** and **Move assignment operator**: Each performs memberwise moving of non-static data members. Generated only if the class contains no user declared copy operations, move operations, or destructor.
+
