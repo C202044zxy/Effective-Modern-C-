@@ -69,6 +69,51 @@ That means that `param` will be a copy of whatever is passed in — a completely
 - If `expr`'s type is a reference, ignore the reference part.
 - If `expr` is a const, ignore that too.
 
+**Array Arguments**
+
+```
+const char name = "...";	// const char [13]
+const char *ptrToName = name;	// array decays to pointer
+```
+
+If this array is passed into a template taking a by-value parameter:
+
+```
+template<typename T>
+void f(T param);
+
+f(name);	// T is deduced as const char *
+```
+
+When passing into a template taking a by-reference parameter:
+
+```
+template<typename T>
+void f(T& param);	// paramtype is const char (&)[13]
+
+f(name);	// T is deduced as const char [13]
+```
+
+Return the size of an array as a compile-time constant:
+
+```
+template<typename T, size_t N>
+constexpr size_t f(T (&)[N]) noexcept {
+	return N;
+}
+```
+
+**Function Arguments**
+
+```
+template<typename T>
+void f1(T param);
+template<typename T>
+void f2(T& param);
+f1(someFunc);	// void (*)(int, double)
+f2(someFunc);	// void (&)(int, double)
+```
+
 **Things to Remember**
 
 - During template type deduction, arguments that are references are treated as non-references, i.e., their reference-ness is ignored. 
